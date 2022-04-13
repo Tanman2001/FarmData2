@@ -10,7 +10,6 @@
 				<button @click="generateReport('yes')"> Generate Report </button>
 			</div>
 		</fieldset>
-	</div>
 	<br>
 
 	
@@ -36,6 +35,7 @@
 		</tr>
        	   </table>
 	</div>	
+	</div>
 	<script>
         var VueTime = new Vue({
                 el: '#activePlantingReport',
@@ -52,7 +52,7 @@
 		
 			state: 'default',
 			
-			recordExist: 'no',
+			recordExist: 'yes',
 			
 			idToCropMap : [
 
