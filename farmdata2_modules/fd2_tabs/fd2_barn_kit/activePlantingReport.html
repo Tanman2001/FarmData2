@@ -4,6 +4,20 @@
 		<h1 class="text-center"> Active Planting Report </h1>
 		<fieldset class="panel panel-default center-block" style="width: 50%;">
 			<legend class="panel-heading" style="background-color: #d62a17; color: white;"> Filters </legend>
+			
+			<label for="field">Field:</label> 
+     				<select id="field" name="field">
+					<option value="All" selected> All </option>
+                			<option default-input="All"  v-for="y in transformAreaMap">{{ y }}</option>
+        			</select>
+			<br>
+			
+			<label for="crop">Crop:</label>
+				<select id="crop" name="crop">
+					<option value="All" selected> All </option>
+					<option  v-for="x in transformCropMap">{{ x }}</option>
+				</select>
+							
 			<br>
 			<div style="display: flex;width:100%; padding: 7px">
 
@@ -12,10 +26,9 @@
 		</fieldset>
 	<br>
 
-	
 
 	<div v-if="recordExist == 'yes'">
-	<table border="1">
+	<table style="width:400px" border="1">
 		<tr>
 			<th>Row</th>
 			<th>Date</th>
@@ -86,7 +99,13 @@
 
 		computed: {
 			
+			transformCropMap() {
+				return Array.from(this.idToCropMap.values());
+			},
 
+			transformAreaMap() {
+                                return Array.from(this.idToAreaMap.values());
+                        }
 
 		},
 
