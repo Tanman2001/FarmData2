@@ -19,6 +19,24 @@
 				</select>
 							
 			<br>
+		
+		
+
+			<label for="log">Log Type:</label>
+                                <select id="log" name="log">
+                                        <option value="All" selected> All </option>
+                                        <option default-input="All"  v-for="x in transformLogMap">{{ x }}</option>
+                                </select>
+
+			<br>			
+
+			<label for="unit">Unit Type:</label>
+                                <select id="unit" name="unit">
+                                        <option value="All" selected> All </option>
+                                        <option default-input="All"  v-for="x in transformUnitMap">{{ x }}</option>
+                                </select>
+
+			
 			<div style="display: flex;width:100%; padding: 7px">
 
 				<button @click="generateReport('yes')"> Generate Report </button>
@@ -59,6 +77,12 @@
 			}),
 			getIDToAreaMap().then((theMap) => {
 				this.idToAreaMap=theMap;
+			}),
+			getIDToLogTypeMap().then((theMap) => {
+				this.idToLogMap=theMap;
+			}),
+			getIDToUnitMap().then((theMap) => {
+				this.idToUnitMap=theMap;
 			})
 			},
                 data: {
@@ -74,7 +98,13 @@
 			idToAreaMap: [
 
 					],
-			
+			idToUnitMap: [
+
+					],
+
+			idToLogMap:  [
+				
+					],
 		
 
 			plantTable: [
@@ -105,8 +135,15 @@
 
 			transformAreaMap() {
                                 return Array.from(this.idToAreaMap.values());
-                        }
+                        },
+			
+			transformUnitMap() {
+				return Array.from(this.idToUnitMap.values());
+			},
 
+			transformLogMap() {
+				return Array.from(this.idToLogMap.values());
+			}
 		},
 
 		methods: {
