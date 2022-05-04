@@ -105,7 +105,9 @@
                 reportVisible: false,
                 moreFilters: false,
                 seedingLogs: [],
+		transplantingLogs: [],
                 updateLog: [],
+		plantingAssets: [],
 
                 sessionToken: null,
                 selectedCrop: 'All',
@@ -150,19 +152,32 @@
                     this.stillLoading = true
                 },
 		
-		<!-- Adding a transplantingLogRequest to put transplanting logs in the seedingLogs table-->
+		<!-- Adding a transplantingLogRequest to put transplanting logs in the transplantingLogs table
+
+		*NOTE: transplantingLogs is not yet implemented in appearing in the table
+
+		-->
 
 		transplantingLogRequestWithDates(){
                     this.reportVisible = true
                     this.moreFilters = true
                     let link = '/log.json?type=farm_transplanting&timestamp[ge]=' + dayjs(this.startDate).unix() + '&timestamp[le]=' + dayjs(this.endDate).unix()
 
-                    getAllPages(link, this.seedingLogs).then(() => {
+                    getAllPages(link, this.transplantingLogs).then(() => {
                         this.stillLoading = false
                     })
                     this.stillLoading = true
                 },
-	
+
+		<!-- Method that pulls assets  -->
+		
+		allAssetRequests(){
+			this.reportVisible = true
+			this.moreFilters = true
+			let link = '/farm_asset
+
+			<!-- stopped here as of end of class, we want to pull the created object for the date -->
+		}
 
                 cropChange(selectedCrop){
                     this.selectedCrop = selectedCrop
