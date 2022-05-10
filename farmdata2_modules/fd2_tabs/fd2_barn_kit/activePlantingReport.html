@@ -172,7 +172,8 @@
 
                     getAllPages(link, this.plantingAssets).then(() => {
                         this.stillLoading = false
-                        //some function to be called
+                        //after you fetch assets, map them
+                        logIdtoAssetIdMapping()
                     })
                     this.stillLoading = true
                 },
