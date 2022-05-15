@@ -32,7 +32,7 @@
 
                         <dropdown-with-all data-cy="area-dropdown" class="center-block" :dropdown-list=areaList includes-all default-input='All' @selection-changed='areaChange'>Area:</dropdown-with-all>                
                 </div>
-                <button data-cy="generate-rpt-btn" class="btn center-block btn-primary" v-if='!reportVisible' @click='seedingLogRequestWithDates'>Generate Report</button>
+                <button data-cy="generate-rpt-btn" class="btn center-block btn-primary" v-if='!reportVisible' @click='seedingLogRequestWithDates(); transplantingLogRequestWithDates(); plantingAssetsRequestWithDates();'>Generate Report</button>
             </div>
         </fieldset>
             <div v-if='reportVisible'>
@@ -105,9 +105,11 @@
                 reportVisible: false,
                 moreFilters: false,
                 seedingLogs: [],
-		transplantingLogs: [],
                 updateLog: [],
-		plantingAssets: [],
+                plantingAssets: [],
+                displayAssets: [],
+                logIds: [],
+                assetIds: [],
 
                 sessionToken: null,
                 selectedCrop: 'All',
@@ -152,32 +154,45 @@
                     this.stillLoading = true
                 },
 		
-		<!-- Adding a transplantingLogRequest to put transplanting logs in the transplantingLogs table
-
-		*NOTE: transplantingLogs is not yet implemented in appearing in the table
-
-		-->
+		<!-- Adding a transplantingLogRequest to put transplanting logs in the seedingLogs table-->
 
 		transplantingLogRequestWithDates(){
                     this.reportVisible = true
                     this.moreFilters = true
                     let link = '/log.json?type=farm_transplanting&timestamp[ge]=' + dayjs(this.startDate).unix() + '&timestamp[le]=' + dayjs(this.endDate).unix()
 
-                    getAllPages(link, this.transplantingLogs).then(() => {
+                    getAllPages(link, this.seedingLogs).then(() => {
                         this.stillLoading = false
                     })
                     this.stillLoading = true
                 },
 
-		<!-- Method that pulls assets  -->
-		
-		allAssetRequests(){
-			this.reportVisible = true
-			this.moreFilters = true
-			let link = '/farm_asset
+        plantingAssetsRequestWithDates(){
+                    this.reportVisible = true
+                    this.moreFilters = true
+                    let link = '/farm_asset.json?type=planting'
 
-			<!-- stopped here as of end of class, we want to pull the created object for the date -->
-		}
+                    getAllPages(link, this.plantingAssets).then(() => {
+                        this.stillLoading = false
+                        //after you fetch assets, map them
+                        this.logIdtoAssetIdMapping()
+                    })
+                    this.stillLoading = true
+                },
+
+        logIdtoAssetIdMapping(){
+            console.log('Now starting logIdtoAssetIdMapping: ')
+            for(i = 0; i < this.plantingAssets.length; i++){
+                console.log(this.plantingAssets[i])
+                this.assetIds.push(this.plantingAssets[i].id)
+                for(j = 0; j < this.seedingLogs.length; j++){
+                    this.logIds.push(this.seedingLogs[j].asset[0].id)
+                    if(this.plantingAssets[i].id == this.seedingLogs[j].asset[0].id)
+                        this.displayAssets.push(this.plantingAssets[i])
+                    }
+                }
+            },
+	
 
                 cropChange(selectedCrop){
                     this.selectedCrop = selectedCrop
@@ -190,11 +205,11 @@
                     if(selectedSeeding == 'All'){
                         this.visibleColumns = [true, true, true, true, false, false, false, false, false, false, true, true, true, true, true]
                     }
-                    else if(selectedSeeding == 'Direct Seedings'){
-                        this.visibleColumns = [true, true, true, true, true, true, true, false, false, false, true, true, true, true, true]
-                    }
                     else if(selectedSeeding == 'Tray Seedings'){
                         this.visibleColumns = [true, true, true, true,false, false, false, true, true, true,  true, true, true, true, true]
+                    }
+                    else {
+                        this.visibleColumns = [true, true, true, true, true, true, true, false, false, false, true, true, true, true, true]
                     }
                 },
                 /**
@@ -363,17 +378,24 @@
                         let cellsPerTray = 0
                         let hours = 0
                         let numWorkers = 0
-                        if(h.log_category[0].name === 'Direct Seedings'){
+                        if(h.log_category[0].name === 'Tray Seedings'){
+                            traySeeds = h.quantity[0].value
+                            numOfTrays = h.quantity[1].value
+                            cellsPerTray = h.quantity[2].value
+                            hours = h.quantity[3].value
+                            numWorkers = h.quantity[4].value
+                        }
+                        else if(h.log_category[0].name === 'Direct Seedings'){
                             rowBed = h.quantity[1].value
                             rowFeet = h.quantity[0].value
                             bedFeet = rowFeet/rowBed
                             hours = h.quantity[2].value
                             numWorkers = h.quantity[3].value
                         }
-                        else{
-                            traySeeds = h.quantity[0].value
-                            numOfTrays = h.quantity[1].value
-                            cellsPerTray = h.quantity[2].value
+                        else {
+                            rowBed = h.quantity[1].value
+                            rowFeet = h.quantity[0].value
+                            bedFeet = rowFeet/rowBed
                             hours = h.quantity[3].value
                             numWorkers = h.quantity[4].value
                         }
@@ -741,3 +763,4 @@
         Vue.config.devtools = true;
     </script>
 </body>
+
