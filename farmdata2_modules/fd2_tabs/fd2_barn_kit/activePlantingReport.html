@@ -48,9 +48,9 @@
                 <div style="display: flex; width: 100%;">
                     <fieldset data-cy="direct-summary" class="center-block panel panel-default" style="width: 50%;" v-if="!(selectedSeeding=='Tray Seedings')">
                         <legend class="panel-heading" style="background-color: #d62a17; color: white;">Direct Seeding Summary</legend>
-                        <div v-if="getTableOneType == 'Tray Seedings'">
+                        <!-- <div v-if="getTableOneType == 'Tray Seedings'">
                             <p style="margin-left: 5%;"> There are no Direct Seeding logs with these parameters</p>
-                        </div>
+                        </div> -->
                         <div v-else>
                             <p style="margin-left: 5%;"> Total Row/Bed Planted: <b>{{ totalRowBed }}</b></p>
                             <p style="margin-left: 5%;"> Total Row Feet Planted: <b>{{ totalRowFeet }}</b></p>
@@ -62,9 +62,9 @@
                     </fieldset>
                     <fieldset data-cy="tray-summary" class="center-block panel panel-default" style="width: 47%;" v-if="!(selectedSeeding=='Direct Seedings')">
                         <legend class="panel-heading" style="background-color: #d62a17; color: white;">Tray Seeding Summary</legend>
-                        <div v-if="getTableOneType == 'Direct Seedings'">
+                        <!-- <div v-if="getTableOneType == 'Direct Seedings'">
                             <p style="margin-left: 5%;"> There are no Tray Seeding logs with these parameters</p>
-                        </div>
+                        </div> -->
                         <div v-else>
                             <p style="margin-left: 5%;">Total Number of Tray Seeds Planted: <b>{{ traySeedsPlanted }}</b></p>
                             <p style="margin-left: 5%;">Total Number of Trays: <b>{{ totalNumTrays }}</b></p>
@@ -206,10 +206,12 @@
                         this.visibleColumns = [true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]
                     }
                     else if(selectedSeeding == 'Tray Seedings'){
-                        this.visibleColumns = [true, true, true, true,false, false, false, true, true, true,  true, true, true, true, true]
+                        //this.visibleColumns = [true, true, true, true,false, false, false, true, true, true,  true, true, true, true, true]
+                        this.visibleColumns = [true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]
                     }
                     else {
-                        this.visibleColumns = [true, true, true, true, true, true, true, false, false, false, true, true, true, true, true]
+                        //this.visibleColumns = [true, true, true, true, true, true, true, false, false, false, true, true, true, true, true]
+                        this.visibleColumns = [true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]
                     }
                 },
                 /**
@@ -422,23 +424,23 @@
                                 //(Math.round(numWorkers*100))/100,
                                 //h.lot_number,
                                 //h.notes.value,
-                                //$vm.idToUserMap.get(h.uid.id)
+                                $vm.idToUserMap.get(h.uid.id)
                             ]
                         }
                     })
                     return rows
                 },
-                getTableOneType(){
-                    let currentType = this.tableRows[0].data[3]
-                    for (i = 0 ; i < this.tableRows.length ; i ++){
-                        if (this.tableRows[i].data[3] == currentType){
-                            currentType = this.tableRows[i].data[3]
-                        }else{
-                            return false
-                        }
-                    }
-                    return currentType
-                },
+                // getTableOneType(){
+                //     let currentType = this.tableRows[0].data[2]
+                //     for (i = 0 ; i < this.tableRows.length ; i ++){
+                //         if (this.tableRows[i].data[3] == currentType){
+                //             currentType = this.tableRows[i].data[3]
+                //         }else{
+                //             return false
+                //         }
+                //     }
+                //     return currentType
+                // },
                 /**
                  * returns a sorted array of all the crops in the current logs. If area or type of seeding does not equal 'All' then the array will only contain crops that have the selected area and/or type of seeding
                  */ 
