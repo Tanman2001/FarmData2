@@ -108,6 +108,8 @@
                 updateLog: [],
                 plantingAssets: [],
                 displayAssets: [],
+                logIds: [],
+                assetIds: [],
 
                 sessionToken: null,
                 selectedCrop: 'All',
@@ -173,16 +175,20 @@
                     getAllPages(link, this.plantingAssets).then(() => {
                         this.stillLoading = false
                         //after you fetch assets, map them
-                        logIdtoAssetIdMapping()
+                        this.logIdtoAssetIdMapping()
                     })
                     this.stillLoading = true
                 },
 
         logIdtoAssetIdMapping(){
-            for(i = 0; i < plantingAssets.length; i++){
-                for(j = 0; j < seeingLogs.length; j++){
-                    if(plantingAssets[i].id == seeingLogs[j].asset[0].id)
-                        displayAssets.push(plantingAssets[i])
+            console.log('Now starting logIdtoAssetIdMapping: ')
+            for(i = 0; i < this.plantingAssets.length; i++){
+                console.log(this.plantingAssets[i])
+                this.assetIds.push(this.plantingAssets[i].id)
+                for(j = 0; j < this.seedingLogs.length; j++){
+                    this.logIds.push(seedingLogs[j].assets[0].id)
+                    if(this.plantingAssets[i].id == this.seedingLogs[j].asset[0].id)
+                        this.displayAssets.push(plantingAssets[i])
                     }
                 }         
             },
