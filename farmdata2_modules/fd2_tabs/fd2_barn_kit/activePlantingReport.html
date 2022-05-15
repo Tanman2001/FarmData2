@@ -181,16 +181,16 @@
                 },
 
         logIdtoAssetIdMapping(){
-            console.log('Now starting logIdtoAssetIdMapping: ')
+            //console.log('Now starting logIdtoAssetIdMapping: ')
             for(i = 0; i < this.plantingAssets.length; i++){
-                console.log(this.plantingAssets[i])
+                //console.log(this.plantingAssets[i])
                 this.assetIds.push(this.plantingAssets[i].id)
                 for(j = 0; j < this.seedingLogs.length; j++){
-                    this.logIds.push(seedingLogs[j].assets[0].id)
+                    this.logIds.push(this.seedingLogs[j].asset[0].id)
                     if(this.plantingAssets[i].id == this.seedingLogs[j].asset[0].id)
-                        this.displayAssets.push(plantingAssets[i])
+                        this.displayAssets.push(this.plantingAssets[i])
                     }
-                }         
+                }
             },
 	
 
@@ -357,7 +357,7 @@
                  * tableRows() filters though seedingLogs to get all the logs that have the correct crop, area, and/or type of seeding that has been selected by the user. Then takes the remaining logs and formats it so that the table component gets the necessary info
                  */ 
                 tableRows() {
-                    let filterRows = this.seedingLogs.filter((x) => x)
+                    let filterRows = this.displayAssets.filter((x) => x)
 
                     if(this.selectedArea != 'All'){
                         filterRows = filterRows.filter((x) => x.movement.area[0].name === this.selectedArea)
@@ -378,45 +378,51 @@
                         let cellsPerTray = 0
                         let hours = 0
                         let numWorkers = 0
-                        if(h.log_category[0].name === 'Tray Seedings'){
-                            traySeeds = h.quantity[0].value
-                            numOfTrays = h.quantity[1].value
-                            cellsPerTray = h.quantity[2].value
-                            hours = h.quantity[3].value
-                            numWorkers = h.quantity[4].value
-                        }
-                        else if(h.log_category[0].name === 'Direct Seedings'){
-                            rowBed = h.quantity[1].value
-                            rowFeet = h.quantity[0].value
-                            bedFeet = rowFeet/rowBed
-                            hours = h.quantity[2].value
-                            numWorkers = h.quantity[3].value
-                        }
-                        else {
-                            rowBed = h.quantity[1].value
-                            rowFeet = h.quantity[0].value
-                            bedFeet = rowFeet/rowBed
-                            hours = h.quantity[3].value
-                            numWorkers = h.quantity[4].value
-                        }
+
+                        // if(h.log_category[0].name === 'Tray Seedings'){
+                        //     traySeeds = h.quantity[0].value
+                        //     numOfTrays = h.quantity[1].value
+                        //     cellsPerTray = h.quantity[2].value
+                        //     hours = h.quantity[3].value
+                        //     numWorkers = h.quantity[4].value
+                        // }
+                        // else if(h.log_category[0].name === 'Direct Seedings'){
+                        //     rowBed = h.quantity[1].value
+                        //     rowFeet = h.quantity[0].value
+                        //     bedFeet = rowFeet/rowBed
+                        //     hours = h.quantity[2].value
+                        //     numWorkers = h.quantity[3].value
+                        // }
+                        // else {
+                        //     rowBed = h.quantity[1].value
+                        //     rowFeet = h.quantity[0].value
+                        //     bedFeet = rowFeet/rowBed
+                        //     hours = h.quantity[3].value
+                        //     numWorkers = h.quantity[4].value
+                        // }
+                        let assetDetails = h.name;
+                        const myArr = assetDetails.split(" ")
+                        let date = myArr[0]
+                        let crop = myArr[1]
+                        let area = myArr[2]
                         return{
                             id: h.id,
                             data: [
-                                dayjs.unix(h.timestamp).format('YYYY-MM-DD'),
-                                $vm.idToCropMap.get(h.data.crop_tid),
-                                h.movement.area[0].name, 
-                                h.log_category[0].name, 
+                                this.date,
+                                this.crop,
+                                this.area, 
+                                //h.log_category[0].name, 
                                 rowBed,
                                 rowFeet,
                                 bedFeet,
                                 traySeeds,
                                 numOfTrays,
                                 cellsPerTray,
-                                (Math.round(hours*100))/100,
-                                (Math.round(numWorkers*100))/100,
-                                h.lot_number,
-                                h.notes.value,
-                                $vm.idToUserMap.get(h.uid.id)
+                                //(Math.round(hours*100))/100,
+                                //(Math.round(numWorkers*100))/100,
+                                //h.lot_number,
+                                //h.notes.value,
+                                //$vm.idToUserMap.get(h.uid.id)
                             ]
                         }
                     })
